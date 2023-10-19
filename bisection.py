@@ -1,22 +1,33 @@
-def f(x):
-    return x**2 - 6*x + 5
+def bisection(f, a, b, tol, max_iter):
+    if f(a) * f(b) >= 0:
+        print("Bisection method may not converge because f(a) and f(b) have the same sign.")
+        return None
 
-def bisection(func, a, b, tol=0.001):
-    if func(a) * func(b) >= 0:
-        raise ValueError("Tidak ada perubahan tanda pada interval [a, b]. Bisection tidak berlaku.")
-
-    while (b - a) / 2.0 > tol:
-        c = (a + b) / 2.0
-        if func(c) == 0.0:
-            return c
-        elif func(c) * func(a) < 0:
-            b = c
+    iteration = 0
+    while (b - a) / 2.0 > tol and iteration < max_iter:
+        midpoint = (a + b) / 2.0
+        if f(midpoint) == 0:
+            return midpoint
+        elif f(a) * f(midpoint) < 0:
+            b = midpoint
         else:
-            a = c
+            a = midpoint
+        iteration += 1
 
-    akar = (a + b) / 2.0
-    return round(akar, 3)  # Membulatkan hasil ke 3 angka di belakang koma
+    return (a + b) / 2.0
 
-# Menjalankan bisection untuk mencari akar dalam interval [3, 6] dengan toleransi 0.001
-akar = bisection(f, 3, 6, 0.001)
-print("Akar persamaan: ", akar)
+# Example usage:
+def example_function(x):
+    return (x*x*x*x)-(x*x*x) + (2*x*x)-(2*x)-12
+
+a = -2.0 # Left endpoint of the interval
+b = 0.0  # Right endpoint of the interval
+tolerance = 0.001 # Tolerance for stopping criteria
+max_iterations = 13 # Maximum number of iterations
+
+root = bisection(example_function, a, b, tolerance, max_iterations)
+
+if root is not None:
+    print(f"Approximate root: {root:.6f}")
+else:
+    print("Bisection method did not converge.")
